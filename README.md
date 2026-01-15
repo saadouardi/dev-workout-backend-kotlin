@@ -4,7 +4,7 @@ Schau dir das Projekt an und beantworte diese Fragen:
 
 1- Wie startet man das Projekt lokal?
 
-- nach dem Klonen des Repos von GitHub und dem Wechsel in das Verzeichnis main-backend file "dev-workout-backend-kotlin"
+- nach dem Klonen des Repos von GitHub und dem Wechsel in das Hauptverzeichnis des Backends "dev-workout-backend-kotlin"
 . Voraussetzungen: JDK 17+
 . Dev-Server starten (Führe den Befehl im Terminal im Verzeichnis "dev-workout-backend-kotlin" aus.): .\gradlew.bat bootRun
 
