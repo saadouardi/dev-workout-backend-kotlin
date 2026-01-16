@@ -1,4 +1,6 @@
-package com.micromerce.workout
+package com.micromerce.workout.model
+
+import com.micromerce.workout.model.Product
 
 data class Cart(
     val products: MutableList<Product> = mutableListOf()

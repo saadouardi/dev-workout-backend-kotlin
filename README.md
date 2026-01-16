@@ -2,76 +2,90 @@
 
 Schau dir das Projekt an und beantworte diese Fragen:
 
-1- Wie startet man das Projekt lokal?
+## 1) Wie startet man das Projekt lokal?
 
-- nach dem Klonen des Repos von GitHub und dem Wechsel in das Hauptverzeichnis des Backends "dev-workout-backend-kotlin"
-. Voraussetzungen: JDK 17+
-. Dev-Server starten (Führe den Befehl im Terminal im Verzeichnis "dev-workout-backend-kotlin" aus.): .\gradlew.bat bootRun
+- Repo klonen und ins Verzeichnis gehen:
+  - `cd dev-workout-backend-kotlin`
 
-- Im Browser öffnen: [http://localhost:8080] oder [http://localhost:8080/products]
+Voraussetzung: JDK 17+
 
-2- Was fehlt dem Projekt, damit es in einer Produktionsumgebung eingesetzt werden kann?
+Starten:
+`./gradlew.bat bootRun`
 
-- Für Produktion würde ich ergänzen:
-. Umgebungsabhängige Konfiguration (application-dev.yml, application-prod.yml)
-. Logging und Monitoring (z. B. Spring Actuator: Health, Metrics)
-. Einheitliche Fehlerbehandlung und Validierung
-. Authentifizierung / Autorisierung (falls nötig)
-. Tests (Unit- und Integrationstests)
-. API-Dokumentation (Swagger / OpenAPI)
-. Datenbank wie (MySQL, PostgreSQL, MongoDB, ...) statt In-Memory-Daten
-. Containerisierung (Docker) und CI-Pipeline
+Backend läuft dann hier: [http://localhost:8080] => [http://localhost:8080/products]
 
-3- Wie kannst du die Endpoints im ProductController ausprobieren?
+## 2) Was fehlt dem Projekt, damit es in einer Produktionsumgebung eingesetzt werden kann?
 
-- Man kann die Endpoints testen mit:
-. Browser: [http://localhost:8080/products]
-. curl: ```curl http://localhost:8080/products```
-. Tools: Postman oder Insomnia
+Für Produktion würde ich ergänzen:
 
-4- Sind die Endpoints im CartController gut definiert? Wenn nein, wie würdest du sie verbessern? Warum?
+- Umgebungsabhängige Konfiguration (z. B. application-dev.yml / application-prod.yml)
+- Logging + Monitoring (Spring Actuator: Health, Metrics)
+- Validierung + einheitliche Fehlerbehandlung
+- Authentifizierung / Autorisierung (falls nötig)
+- Tests (Unit + Integration)
+- API-Dokumentation (Swagger / OpenAPI)
+- richtige Datenbank statt In-Memory Liste
+- CI/CD (Build, Tests, Deploy)
+- CORS in Prod restriktiver (nur erlaubte Domains)
 
-- Die Endpoints funktionieren, sind aber nicht optimal REST-konform.
+## 3) Wie kannst du die Endpoints im ProductController ausprobieren?
 
-## Aktuell
+- Browser: [http://localhost:8080/products]
 
-GET /cart/items
-POST /cart/addItem
-POST /cart/removeItemFromCart
+- curl:
+  - `curl http://localhost:8080/products`
 
-## Verbesserungsvorschlag
+- Tools:
+  - Postman / Insomnia
 
-GET /cart → Warenkorb anzeigen
-POST /cart/items → Produkt hinzufügen
-PATCH /cart/items/{productId} → Menge ändern
-DELETE /cart/items/{productId} → Produkt entfernen
-DELETE /cart → Warenkorb leeren
+## 4) Sind die Endpoints im CartController gut definiert? Wenn nein, wie würdest du sie verbessern? Warum?
 
-- Warum:
-. Klarere URLs
-. Richtige HTTP-Methoden
-. Einfachere Nutzung im Frontend
-. Bessere Erweiterbarkeit
-Außerdem sollte klar definiert sein, wie die id übergeben wird (@PathVariable oder @RequestParam).
+Die Endpoints funktionieren, aber sind nicht optimal REST-konform.
 
-5- Fällt dir eine Fachlichkeit eines typischen Warenkorbs ein, die im CartController fehlt?
+Aktuell:
 
-- Es fehlen einige typische Funktionen:
-. Mengenverwaltung (gleiche Produkte zusammenfassen)
-. Warenkorb leeren
-. Rückgabe des aktualisierten Warenkorbs nach Änderungen
-. Validierung (Produkt existiert, Menge > 0)
-. Gesamtsumme / Zwischensumme
-. Funktionalität: Lagerbestandsprüfung
+- `GET /cart/items`
+- `POST /cart/addItem`
+- `POST /cart/removeItemFromCart`
 
-6- Welche Verbesserungen würdest du am Code vornehmen?
+Verbesserung (REST):
 
-- Ich würde zum Beispiel:
-. Product als data class schreiben (idiomatischer in Kotlin)
-. Im Warenkorb eine Struktur mit quantity verwenden statt `MutableList<Product>`
-. DTOs für Requests nutzen (z. B. AddToCartRequest)
-. Backend-Ordner klarer strukturieren.
-. Klare Rückgaben aus Controller-Methoden verwenden
-. Validierung ergänzen
-. Tests hinzufügen
-. CORS konfigurationsabhängig machen (Dev erlaubt localhost, Prod restriktiver)
+- `GET /cart` → Warenkorb anzeigen
+- `POST /cart/items` → Produkt hinzufügen
+- `PATCH /cart/items/{productId}` → Menge ändern
+- `DELETE /cart/items/{productId}` → Produkt entfernen
+- `DELETE /cart` → Warenkorb leeren
+
+Warum:
+
+- klarere URLs
+- passende HTTP-Methoden
+- einfacher im Frontend zu benutzen
+- besser erweiterbar
+
+## 5) Fällt dir eine Fachlichkeit eines typischen Warenkorbs ein, die im CartController fehlt?
+
+Typische Punkte, die fehlen:
+
+- Mengenverwaltung (quantity pro Produkt)
+- Warenkorb leeren
+- Rückgabe des aktualisierten Warenkorbs nach add/remove
+- Validierung (Produkt existiert? Menge > 0?)
+- Zwischensumme / Gesamtsumme
+- ggf. Lagerbestand-Prüfung
+
+## 6) Welche Verbesserungen würdest du am Code vornehmen?
+
+- Package/Ordnerstruktur klarer machen (config/controller/model/data)
+- `Product` als `data class` (idiomatischer Kotlin)
+- Cart als `Map<ProductId, quantity>` statt `MutableList<Product>`
+- DTOs für Requests nutzen (z. B. AddToCartRequest mit productId + quantity)
+- Controller sollten Response zurückgeben (z. B. aktualisierten Cart)
+- Tests ergänzen
+- CORS:
+  - Dev: localhost erlauben
+  - Prod: nur die Frontend-Domain erlauben
+
+## Hosting
+
+Backend ist deployed auf Render: [https://dev-workout-backend-kotlin.onrender.com/products]

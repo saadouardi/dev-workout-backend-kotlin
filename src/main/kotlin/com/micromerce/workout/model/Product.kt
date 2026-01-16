@@ -1,4 +1,4 @@
-package com.micromerce.workout
+package com.micromerce.workout.model
 
 class Product {
     var id: Int

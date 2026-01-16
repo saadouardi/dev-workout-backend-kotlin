@@ -1,4 +1,6 @@
-package com.micromerce.workout
+package com.micromerce.workout.data
+
+import com.micromerce.workout.model.Product
 
 object Products {
     val products = listOf(
