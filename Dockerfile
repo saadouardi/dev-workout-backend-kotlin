@@ -1,19 +1,22 @@
-# ---- Build stage ----
-FROM eclipse-temurin:17-jdk AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
-COPY . .
+COPY gradlew gradlew.bat settings.gradle.kts build.gradle.kts ./
+COPY gradle ./gradle
+RUN chmod +x ./gradlew
 
-# Use the Gradle Wrapper from the repo (gradle 9.2.1)
-RUN chmod +x ./gradlew && ./gradlew build -x test
+COPY src ./src
+RUN ./gradlew clean build -x test --no-daemon
 
-# ---- Run stage ----
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
 
 COPY --from=build /app/build/libs/*.jar app.jar
 
+USER app
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
