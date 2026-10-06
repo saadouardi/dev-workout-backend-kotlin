@@ -1,91 +1,75 @@
-# Developer Workout Spring Boot & Kotlin
+# Kotlin + Spring Boot Developer Challenge
 
-Schau dir das Projekt an und beantworte diese Fragen:
+This repository is a **fork of the Micromerce backend developer challenge**. I used the provided starting point and implemented improvements on my own branch to practice API design, Kotlin, Spring Boot, and backend engineering decisions.
 
-## 1) Wie startet man das Projekt lokal?
+> **My work is on the `saad/improvements` branch**, which is also configured as the default branch of this fork.
 
-- Repo klonen und ins Verzeichnis gehen:
-  - `cd dev-workout-backend-kotlin`
+## Tech stack
 
-Voraussetzung: JDK 17+
+- Kotlin
+- Spring Boot
+- Gradle
+- REST APIs
+- Docker
 
-Starten:
-`./gradlew.bat bootRun`
+## What I worked on
 
-Backend läuft dann hier: [http://localhost:8080] => [http://localhost:8080/products]
+- Reviewed and improved REST endpoint design
+- Added clearer backend structure and configuration
+- Improved CORS handling for local frontend integration
+- Evaluated production-readiness gaps
+- Connected the backend to the React + TypeScript challenge frontend
+- Deployed the backend for integration testing
 
-## 2) Was fehlt dem Projekt, damit es in einer Produktionsumgebung eingesetzt werden kann?
+## API
 
-Für Produktion würde ich ergänzen:
+Example products endpoint:
 
-- Umgebungsabhängige Konfiguration (z. B. application-dev.yml / application-prod.yml)
-- Logging + Monitoring (Spring Actuator: Health, Metrics)
-- Validierung + einheitliche Fehlerbehandlung
-- Authentifizierung / Autorisierung (falls nötig)
-- Tests (Unit + Integration)
-- API-Dokumentation (Swagger / OpenAPI)
-- richtige Datenbank statt In-Memory Liste
-- CI/CD (Build, Tests, Deploy)
-- CORS in Prod restriktiver (nur erlaubte Domains)
+https://dev-workout-backend-kotlin.onrender.com/products
 
-## 3) Wie kannst du die Endpoints im ProductController ausprobieren?
+Run locally:
 
-- Browser: [http://localhost:8080/products]
+```bash
+./gradlew bootRun
+```
 
-- curl:
-  - `curl http://localhost:8080/products`
+The backend runs on:
 
-- Tools:
-  - Postman / Insomnia
+```text
+http://localhost:8080
+```
 
-## 4) Sind die Endpoints im CartController gut definiert? Wenn nein, wie würdest du sie verbessern? Warum?
+## REST design improvements
 
-Die Endpoints funktionieren, aber sind nicht optimal REST-konform.
+The original cart routes were functional but action-oriented. A more REST-oriented design would use:
 
-Aktuell:
+```text
+GET    /cart
+POST   /cart/items
+PATCH  /cart/items/{productId}
+DELETE /cart/items/{productId}
+DELETE /cart
+```
 
-- `GET /cart/items`
-- `POST /cart/addItem`
-- `POST /cart/removeItemFromCart`
+This makes resources and HTTP semantics clearer and improves frontend integration.
 
-Verbesserung (REST):
+## Production improvements I would add
 
-- `GET /cart` → Warenkorb anzeigen
-- `POST /cart/items` → Produkt hinzufügen
-- `PATCH /cart/items/{productId}` → Menge ändern
-- `DELETE /cart/items/{productId}` → Produkt entfernen
-- `DELETE /cart` → Warenkorb leeren
+- Environment-specific configuration
+- Structured logging and monitoring
+- Request validation and consistent error handling
+- Authentication / authorization where required
+- Unit and integration tests
+- OpenAPI documentation
+- Persistent database storage
+- CI/CD
+- Restrictive production CORS configuration
 
-Warum:
+## Related frontend
 
-- klarere URLs
-- passende HTTP-Methoden
-- einfacher im Frontend zu benutzen
-- besser erweiterbar
+[React + TypeScript challenge](https://github.com/saadouardi/dev-workout-react-typescript)
 
-## 5) Fällt dir eine Fachlichkeit eines typischen Warenkorbs ein, die im CartController fehlt?
+## Author
 
-Typische Punkte, die fehlen:
-
-- Mengenverwaltung (quantity pro Produkt)
-- Warenkorb leeren
-- Rückgabe des aktualisierten Warenkorbs nach add/remove
-- Validierung (Produkt existiert? Menge > 0?)
-- Zwischensumme / Gesamtsumme
-- ggf. Lagerbestand-Prüfung
-
-## 6) Welche Verbesserungen würdest du am Code vornehmen?
-
-- Package/Ordnerstruktur klarer machen (config/controller/model/data)
-- `Product` als `data class` (idiomatischer Kotlin)
-- Cart als `Map<ProductId, quantity>` statt `MutableList<Product>`
-- DTOs für Requests nutzen (z. B. AddToCartRequest mit productId + quantity)
-- Controller sollten Response zurückgeben (z. B. aktualisierten Cart)
-- Tests ergänzen
-- CORS:
-  - Dev: localhost erlauben
-  - Prod: nur die Frontend-Domain erlauben
-
-## Hosting
-
-Backend ist deployed auf Render: [https://dev-workout-backend-kotlin.onrender.com/products]
+**Saad Ouardi**  
+[Portfolio](https://saadouardi.vercel.app) · [LinkedIn](https://www.linkedin.com/in/saad-ouardi)
